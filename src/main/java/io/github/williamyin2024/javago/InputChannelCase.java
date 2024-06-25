@@ -27,6 +27,12 @@ public class InputChannelCase<T> implements Runnable {
 
 	@Override
 	public void run() {
+		if (inputChannel.isClosed() && closed.compareAndSet(false, true)) {
+			toSelector.send(id);
+			T message = inputChannel.receive();
+			callback.accept(message);
+			toSelector.send(id);
+		}
 		boolean hasNext = inputChannel.hasNext();
 		if (Thread.currentThread().isInterrupted() && !inputChannel.isClosed()) {
 			return;

@@ -43,7 +43,7 @@ public class DelayedCase implements Runnable {
 					thread.interrupt();
 				}
 			}
-		}, getExecutionTime());
+		}, calculateExecutionTime());
 		try {
 			Thread.sleep(delay.toMillis());
 		} catch (InterruptedException e) {
@@ -51,7 +51,7 @@ public class DelayedCase implements Runnable {
 		}
 	}
 
-	private Date getExecutionTime() {
+	private Date calculateExecutionTime() {
 		Instant currentinstant = new Date().toInstant();
 		Instant instantAfterDelay = currentinstant.plus(delay);
 		return Date.from(instantAfterDelay);

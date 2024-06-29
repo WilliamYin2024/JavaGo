@@ -1,9 +1,9 @@
-import io.github.williamyin2024.javago.sync.WaitGroup;
+import io.javago.sync.WaitGroup;
 import org.junit.Test;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static io.github.williamyin2024.javago.Go.go;
+import static io.javago.Go.go;
 import static org.junit.Assert.assertTrue;
 
 public class TestWaitGroup {

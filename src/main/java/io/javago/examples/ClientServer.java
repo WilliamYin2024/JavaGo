@@ -1,13 +1,13 @@
-package io.github.williamyin2024.javago.examples;
+package io.javago.examples;
 
-import io.github.williamyin2024.javago.sync.WaitGroup;
+import io.javago.sync.WaitGroup;
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.stream.IntStream;
 
-import static io.github.williamyin2024.javago.Go.go;
+import static io.javago.Go.go;
 
 public class ClientServer {
 
@@ -36,20 +36,18 @@ public class ClientServer {
 			try (
 				ServerSocket serverSocket = new ServerSocket(portNumber)
 			) {
-				wg.done();
 				while (true) {
 					Socket clientSocket = serverSocket.accept();
 					go(() -> {
 						try (
-							ObjectInputStream is = new ObjectInputStream(clientSocket.getInputStream())
+							ObjectInputStream is = new ObjectInputStream(clientSocket.getInputStream());
+							wg
 							) {
 							String msg = (String) is.readObject();
 							System.out.println("Received: " + msg);
 							clientSocket.close();
 						} catch (IOException | ClassNotFoundException e) {
 							throw new RuntimeException(e);
-						} finally {
-							wg.done();
 						}
 					});
 				}

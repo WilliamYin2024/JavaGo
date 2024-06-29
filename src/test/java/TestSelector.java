@@ -1,11 +1,11 @@
-import io.github.williamyin2024.javago.Channel;
-import io.github.williamyin2024.javago.Selector;
+import io.javago.Channel;
 import org.junit.Test;
 
 import java.time.Duration;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static io.github.williamyin2024.javago.Go.go;
+import static io.javago.Go.go;
+import static io.javago.Selector.select;
 import static org.junit.Assert.assertEquals;
 
 public class TestSelector {
@@ -15,7 +15,7 @@ public class TestSelector {
 		final AtomicInteger value = new AtomicInteger(0);
 		Channel<Integer> ch = Channel.make();
 		ch.send(1);
-		Selector.select()
+		select()
 			.addCase(ch, value::set)
 			.addDefault(() -> value.set(2))
 			.run();
@@ -26,7 +26,7 @@ public class TestSelector {
 	public void Test_DefaultRun() {
 		final AtomicInteger value = new AtomicInteger(0);
 		Channel<Integer> ch = Channel.make();
-		Selector.select()
+		select()
 			.addCase(ch, value::set)
 			.addDefault(() -> value.set(2))
 			.run();
@@ -38,7 +38,7 @@ public class TestSelector {
 		final AtomicInteger value = new AtomicInteger(0);
 		Channel<Integer> ch = Channel.make();
 		ch.send(4);
-		Selector.select()
+		select()
 			.addCase(ch, value::addAndGet)
 			.addCase(ch, value::addAndGet)
 			.run();
@@ -52,7 +52,7 @@ public class TestSelector {
 		Channel<Integer> ch2 = Channel.make();
 		ch1.send(2);
 		ch2.send(2);
-		Selector.select()
+		select()
 			.addCase(ch1, value::addAndGet)
 			.addCase(ch2, value::addAndGet)
 			.run();
@@ -65,7 +65,7 @@ public class TestSelector {
 		Channel<Integer> ch = Channel.make();
 		ch.send(1);
 		ch.close();
-		Selector.select()
+		select()
 			.addCase(ch, value::set)
 			.addDefault(() -> value.set(2))
 			.run();
@@ -77,7 +77,7 @@ public class TestSelector {
 		final AtomicInteger value = new AtomicInteger(0);
 		Channel<Integer> ch = Channel.make();
 		ch.send(1);
-		Selector.select()
+		select()
 			.addCase(ch, value::set)
 			.addCase(Duration.ofMillis(500), () -> value.set(2))
 			.run();
@@ -97,7 +97,7 @@ public class TestSelector {
 			}
 			ch.send(1);
 		});
-		Selector.select()
+		select()
 			.addCase(ch, value::set)
 			.addCase(Duration.ofMillis(500), () -> value.set(2))
 			.run();
@@ -108,7 +108,7 @@ public class TestSelector {
 	public void Test_OnlyOneCaseRunOneOutputChannel() {
 		final AtomicInteger value = new AtomicInteger(0);
 		Channel<Integer> ch = Channel.make();
-		Selector.select()
+		select()
 			.addCase(ch, 1, value::incrementAndGet)
 			.addCase(ch, 1, value::incrementAndGet)
 			.run();
@@ -126,7 +126,7 @@ public class TestSelector {
 		final AtomicInteger value = new AtomicInteger(0);
 		Channel<Integer> ch1 = Channel.make();
 		Channel<Integer> ch2 = Channel.make();
-		Selector.select()
+		select()
 			.addCase(ch1, 1, value::incrementAndGet)
 			.addCase(ch2, 1, value::incrementAndGet)
 			.run();

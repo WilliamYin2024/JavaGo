@@ -1,9 +1,9 @@
-import io.github.williamyin2024.javago.Channel;
-import io.github.williamyin2024.javago.InputChannel;
-import io.github.williamyin2024.javago.OutputChannel;
+import io.javago.Channel;
+import io.javago.InputChannel;
+import io.javago.OutputChannel;
 import org.junit.Test;
 
-import static io.github.williamyin2024.javago.Go.go;
+import static io.javago.Go.go;
 import static org.junit.Assert.assertEquals;
 
 public class TestChannel {

@@ -9,7 +9,7 @@ import java.util.stream.IntStream;
 
 import static io.javago.Go.go;
 
-public class ClientServer {
+class ClientServer {
 
 	private static final WaitGroup wg = new WaitGroup();
 	private static final int numClients = 10;

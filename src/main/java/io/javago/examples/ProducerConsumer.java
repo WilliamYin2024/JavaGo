@@ -9,7 +9,7 @@ import java.util.Arrays;
 
 import static io.javago.Go.go;
 
-public class ProducerConsumer {
+class ProducerConsumer {
 
 	private static final String[] sodas = {
 		"Coca-Cola",
@@ -25,34 +25,33 @@ public class ProducerConsumer {
 	};
 
 	public static void main(String[] args) {
-		try (Channel<String> channel = Channel.make()) {
-			WaitGroup wg = new WaitGroup();
-			wg.add(2);
-			go(new Producer(channel, wg));
-			go(new Consumer(channel, wg));
-			wg.await();
-		}
+		Channel<String> channel = Channel.make();
+		WaitGroup wg = new WaitGroup();
+		wg.add(2);
+		go(new Producer(channel, wg));
+		go(new Consumer(channel, wg));
+		wg.await();
 	}
 
 	private record Producer(OutputChannel<String> channel, WaitGroup wg) implements Runnable {
 
 		@Override
-			public void run() {
-				try (channel; wg) {
-					Arrays.stream(sodas).forEach(channel::send);
-				}
+		public void run() {
+			try (channel; wg) {
+				Arrays.stream(sodas).forEach(channel::send);
 			}
 		}
+	}
 
 	private record Consumer(InputChannel<String> channel, WaitGroup wg) implements Runnable {
 
 		@Override
-			public void run() {
-				try (wg) {
-					for (String soda : channel) {
-						System.out.printf("Consumer received %s.%n", soda);
-					}
+		public void run() {
+			try (wg) {
+				for (String soda : channel) {
+					System.out.printf("Consumer received %s.%n", soda);
 				}
 			}
 		}
+	}
 }

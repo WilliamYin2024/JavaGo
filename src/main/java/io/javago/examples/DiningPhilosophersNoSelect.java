@@ -8,10 +8,10 @@ import java.util.List;
 
 import static io.javago.Go.go;
 
-public class DiningPhilosophersNoSelect {
+class DiningPhilosophersNoSelect {
 
-	private static final int NUM_PHILOSOPHERS = 500;
-	private static final int NUM_MEALS = 500;
+	private static final int NUM_PHILOSOPHERS = 10;
+	private static final int NUM_MEALS = 3;
 	private static final WaitGroup wg = new WaitGroup();
 
 	public static void main(String[] args) {
@@ -31,6 +31,9 @@ public class DiningPhilosophersNoSelect {
 		}
 
 		wg.await();
+		for (Channel<Object> fork : forks) {
+			fork.close();
+		}
 		System.out.println("All philosophers have finished dining.");
 	}
 
@@ -42,18 +45,24 @@ public class DiningPhilosophersNoSelect {
 				for (int i = 0; i < NUM_MEALS; i++) {
 					think();
 					eat();
+					System.out.println("Philosopher " + id + " has eaten " + (i+1) + " meals.");
 				}
 			}
-			System.out.println("Philosopher " + id + " has finished.");
+			System.out.println("Philosopher " + id + " has finished eating.");
+		}
+
+		private void sleep(long millis) {
+			if (millis > 0) {
+				synchronized (this) {
+					try {
+						this.wait(millis);
+					} catch (InterruptedException ignored) {}
+				}
+			}
 		}
 
 		private void think() {
-			System.out.println("Philosopher " + id + " thinking.");
-			try {
-				Thread.sleep((int) (Math.random() * 100 + 1));
-			} catch (InterruptedException e) {
-				throw new RuntimeException(e);
-			}
+			sleep((int) (Math.random() * 100 + 1));
 		}
 
 		private void eat() {
@@ -61,21 +70,12 @@ public class DiningPhilosophersNoSelect {
 			Channel<Object> secondFork = (firstFork == leftFork) ? rightFork : leftFork;
 
 			firstFork.receive();
-			System.out.println("Philosopher " + id + " received first fork.");
 			secondFork.receive();
-			System.out.println("Philosopher " + id + " received second fork.");
 
-			System.out.println("Philosopher " + id + " eating.");
-			try {
-				Thread.sleep((int) (Math.random() * 100 + 1));
-			} catch (InterruptedException e) {
-				throw new RuntimeException(e);
-			}
+			sleep((int) (Math.random() * 100 + 1));
 
 			secondFork.send(new Object());
-			System.out.println("Philosopher " + id + " put down second fork.");
 			firstFork.send(new Object());
-			System.out.println("Philosopher " + id + " put down first fork.");
 		}
 	}
 }

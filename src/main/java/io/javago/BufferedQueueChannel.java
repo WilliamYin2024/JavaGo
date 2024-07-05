@@ -50,6 +50,7 @@ public class BufferedQueueChannel<T> implements Channel<T> {
 					this.wait();
 				} catch (InterruptedException e) {
 					Thread.currentThread().interrupt();
+					return;
 				}
 			} else {
 				break;
@@ -80,6 +81,7 @@ public class BufferedQueueChannel<T> implements Channel<T> {
 					this.wait();
 				} catch (InterruptedException e) {
 					Thread.currentThread().interrupt();
+					return null;
 				}
 			} else {
 				break;
@@ -162,6 +164,7 @@ public class BufferedQueueChannel<T> implements Channel<T> {
 				this.wait();
 			} catch (InterruptedException e) {
 				Thread.currentThread().interrupt();
+				return false;
 			}
 		}
 	}
@@ -185,6 +188,7 @@ public class BufferedQueueChannel<T> implements Channel<T> {
 				this.wait();
 			} catch (InterruptedException e) {
 				Thread.currentThread().interrupt();
+				return false;
 			}
 		}
 	}

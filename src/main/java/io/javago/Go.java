@@ -21,7 +21,6 @@ public class Go {
 	 * It is initialized as a virtual thread per task executor.
 	 */
 	private static final ExecutorService threadPool;
-//	private static final ExecutorService threadPool;
 
 	// Static block to add a shutdown hook to ensure the thread pool is properly shut down when the JVM exits.
 	static {

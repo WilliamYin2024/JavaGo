@@ -26,8 +26,12 @@ public class BufferedQueueChannel<T> implements Channel<T> {
 	 * Constructs a {@code BufferedQueueChannel} with the specified capacity.
 	 *
 	 * @param capacity the capacity of the channel
+	 * @throws IllegalArgumentException if capacity is less than or equal to 0
 	 */
 	public BufferedQueueChannel(int capacity) {
+		if (capacity <= 0) {
+			throw new IllegalArgumentException("capacity must be greater than 0");
+		}
 		channelQueue = new ArrayDeque<>(capacity);
 		this.capacity = capacity;
 	}
